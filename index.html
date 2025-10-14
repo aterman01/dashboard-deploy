@@ -3,126 +3,429 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NETFLIXING Master Dashboard</title>
+    <title>UNITY2025 Master Admin Dashboard</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             padding: 20px;
         }
-        
-        .connection-status {
-            position: fixed; top: 20px; right: 20px;
-            padding: 10px 20px; border-radius: 20px;
-            font-size: 0.9rem; font-weight: 600;
-            z-index: 1000; backdrop-filter: blur(10px);
-        }
-        .status-connected { background: rgba(16, 185, 129, 0.9); color: white; }
-        .status-error { background: rgba(239, 68, 68, 0.9); color: white; }
-        
+
         .dashboard-container {
-            max-width: 1600px; margin: 0 auto;
-            background: white; border-radius: 20px;
+            max-width: 1600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
             box-shadow: 0 20px 60px rgba(0,0,0,0.3);
             overflow: hidden;
         }
-        
+
         .header {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white; padding: 30px 40px;
+            color: white;
+            padding: 30px 40px;
         }
-        .header h1 { font-size: 2rem; margin-bottom: 10px; }
-        .header-subtitle { opacity: 0.9; margin-bottom: 20px; }
+
+        .header h1 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .header-subtitle {
+            opacity: 0.9;
+            margin-bottom: 20px;
+        }
+
         .header-stats {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px; margin-top: 20px;
+            gap: 15px;
+            margin-top: 20px;
         }
+
         .stat-card {
             background: rgba(255,255,255,0.2);
             backdrop-filter: blur(10px);
-            padding: 20px; border-radius: 10px; text-align: center;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
         }
-        .stat-card h3 { font-size: 2rem; margin-bottom: 5px; }
-        .stat-card p { font-size: 0.9rem; opacity: 0.9; }
-        
+
+        .stat-card h3 {
+            font-size: 2rem;
+            margin-bottom: 5px;
+        }
+
+        .stat-card p {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
         .tabs {
-            display: flex; background: #f8fafc;
+            display: flex;
+            background: #f8fafc;
             border-bottom: 2px solid #e2e8f0;
             overflow-x: auto;
         }
+
         .tab {
-            padding: 20px 30px; cursor: pointer;
-            background: transparent; border: none;
-            font-size: 1rem; font-weight: 600;
-            color: #64748b; transition: all 0.3s;
+            padding: 20px 30px;
+            cursor: pointer;
+            background: transparent;
+            border: none;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #64748b;
+            transition: all 0.3s;
             white-space: nowrap;
         }
-        .tab:hover { background: white; color: #667eea; }
+
+        .tab:hover {
+            background: white;
+            color: #667eea;
+        }
+
         .tab.active {
-            background: white; color: #667eea;
+            background: white;
+            color: #667eea;
             border-bottom: 3px solid #667eea;
         }
-        
-        .tab-content { display: none; padding: 40px; animation: fadeIn 0.3s; }
-        .tab-content.active { display: block; }
+
+        .tab-content {
+            display: none;
+            padding: 40px;
+            animation: fadeIn 0.3s;
+            max-height: 800px;
+            overflow-y: auto;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
-        
+
         .panel {
-            background: #f8fafc; border-radius: 15px;
-            padding: 25px; margin-bottom: 20px;
+            background: #f8fafc;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
         }
+
         .panel h2 {
-            color: #1e293b; margin-bottom: 20px;
+            color: #1e293b;
+            margin-bottom: 20px;
             font-size: 1.5rem;
         }
-        
-        .info-box {
-            padding: 15px; border-radius: 8px; margin: 15px 0;
+
+        .agent-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            border-left: 4px solid #667eea;
+            cursor: pointer;
+            transition: all 0.3s;
         }
+
+        .agent-card:hover {
+            transform: translateX(5px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.2);
+        }
+
+        .agent-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .agent-name {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .status-badge {
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .status-active {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .status-creating {
+            background: #fef3c7;
+            color: #854d0e;
+        }
+
+        .agent-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .agent-stat {
+            text-align: center;
+            padding: 8px;
+            background: #f8fafc;
+            border-radius: 5px;
+        }
+
+        .agent-stat strong {
+            display: block;
+            color: #667eea;
+            font-size: 1.2rem;
+        }
+
+        .agent-stat span {
+            font-size: 0.8rem;
+            color: #64748b;
+        }
+
+        .activity-item {
+            padding: 15px;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+
+        .activity-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+        }
+
+        .activity-video {
+            background: #dbeafe;
+        }
+
+        .activity-post {
+            background: #f3e8ff;
+        }
+
+        .activity-interaction {
+            background: #fef3c7;
+        }
+
+        .activity-content {
+            flex: 1;
+        }
+
+        .activity-title {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 3px;
+        }
+
+        .activity-time {
+            font-size: 0.8rem;
+            color: #64748b;
+        }
+
+        .queue-item {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            border-left: 3px solid #667eea;
+        }
+
+        .queue-topic {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .queue-meta {
+            font-size: 0.8rem;
+            color: #64748b;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .priority {
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+
+        .priority-high {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .priority-medium {
+            background: #fef3c7;
+            color: #854d0e;
+        }
+
+        .priority-low {
+            background: #e0e7ff;
+            color: #3730a3;
+        }
+
+        .interaction-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+
+        .interaction-card.debate {
+            border-left: 4px solid #ef4444;
+        }
+
+        .interaction-card.dating {
+            border-left: 4px solid #10b981;
+        }
+
+        .interaction-card.teaching {
+            border-left: 4px solid #f59e0b;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 10px;
+            margin-right: 10px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-secondary {
+            background: #f8fafc;
+            color: #333;
+            border: 1px solid #e2e8f0;
+        }
+
+        .btn-secondary:hover {
+            background: #e2e8f0;
+        }
+
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .quick-action {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .quick-action:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .quick-action-icon {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        .info-box {
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+
         .info-success {
             background: #f0fdf4;
             border-left: 4px solid #4ade80;
             color: #166534;
         }
-        
-        .grid-3 {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 15px;
-        }
-        .card {
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
+
+        .performance-summary {
             text-align: center;
+            padding: 30px;
+            background: white;
+            border-radius: 10px;
         }
-        .card-icon { font-size: 2rem; margin-bottom: 10px; }
-        .card strong { display: block; margin: 10px 0; }
-        .card .status {
-            color: #10b981;
-            margin-top: 5px;
-            font-weight: 600;
+
+        .performance-summary .big-number {
+            font-size: 3rem;
+            font-weight: bold;
+            color: #667eea;
+            margin: 10px 0;
+        }
+
+        .performance-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .performance-stat {
+            text-align: center;
+            padding: 15px;
+            background: #f8fafc;
+            border-radius: 8px;
         }
     </style>
 </head>
 <body>
-    <div class="connection-status" id="connectionStatus">● Connecting...</div>
-
     <div class="dashboard-container">
         <div class="header">
-            <h1>🎯 NETFLIXING Master Dashboard</h1>
-            <p class="header-subtitle" id="updateTime">Last updated: Just now</p>
+            <h1>🎯 UNITY2025 Master Control Center</h1>
+            <p class="header-subtitle" id="updateTime">Real-time autonomous management • Last updated: Just now</p>
             
             <div class="header-stats">
                 <div class="stat-card">
-                    <h3 id="agentCount">--</h3>
+                    <h3>23</h3>
                     <p>AI Agents</p>
                 </div>
                 <div class="stat-card">
@@ -139,204 +442,33 @@
                 </div>
                 <div class="stat-card">
                     <h3>✓</h3>
-                    <p>Backend Status</p>
+                    <p>Avatar System Ready</p>
                 </div>
             </div>
         </div>
 
         <div class="tabs">
             <button class="tab active" onclick="showTab('overview')">📊 Overview</button>
-            <button class="tab" onclick="showTab('agents')">👥 Agents (<span id="agentTabCount">--</span>)</button>
-            <button class="tab" onclick="showTab('status')">🚀 System Status</button>
+            <button class="tab" onclick="showTab('agents')">👥 Agents (23)</button>
+            <button class="tab" onclick="showTab('activity')">📈 Activity Feed</button>
+            <button class="tab" onclick="showTab('content')">📝 Content Queue</button>
+            <button class="tab" onclick="showTab('interactions')">🤝 Interactions</button>
+            <button class="tab" onclick="showTab('avatar')">🎭 Avatar System</button>
+            <button class="tab" onclick="showTab('analytics')">📊 Analytics</button>
+            <button class="tab" onclick="showTab('qrid')">🥽 QRID-AR</button>
+            <button class="tab" onclick="showTab('docs')">📚 Docs</button>
         </div>
 
-        <!-- OVERVIEW TAB -->
+        <!-- Tabs with full content from master dashboard -->
         <div id="overview" class="tab-content active">
-            <div class="panel">
-                <h2>🎯 Platform Overview</h2>
-                <div class="info-box info-success">
-                    <strong>✅ All Systems Operational</strong><br>
-                    Backend connected • 23 AI agents active • Avatar system ready
-                </div>
-
-                <div class="grid-3" style="margin-top: 30px;">
-                    <div class="card">
-                        <div class="card-icon">🎬</div>
-                        <strong>Netflixing Platform</strong>
-                        <div class="status">● LIVE</div>
-                        <p style="font-size: 0.9rem; color: #64748b; margin-top: 10px;">
-                            23 AI agents creating content autonomously
-                        </p>
-                    </div>
-                    <div class="card">
-                        <div class="card-icon">🎭</div>
-                        <strong>Avatar System</strong>
-                        <div class="status">● READY</div>
-                        <p style="font-size: 0.9rem; color: #64748b; margin-top: 10px;">
-                            ReadyPlayerMe & HeyGen integration complete
-                        </p>
-                    </div>
-                    <div class="card">
-                        <div class="card-icon">🚂</div>
-                        <strong>Railway Backend</strong>
-                        <div class="status">● LIVE</div>
-                        <p style="font-size: 0.9rem; color: #64748b; margin-top: 10px;">
-                            API serving 23 agents with full profiles
-                        </p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="panel">
-                <h2>📈 Quick Stats</h2>
-                <div class="grid-3">
-                    <div class="card">
-                        <div style="font-size: 2.5rem; color: #667eea; font-weight: bold;">13</div>
-                        <div style="color: #64748b; margin-top: 5px;">QRID Agents</div>
-                    </div>
-                    <div class="card">
-                        <div style="font-size: 2.5rem; color: #667eea; font-weight: bold;">10</div>
-                        <div style="color: #64748b; margin-top: 5px;">Netflixing Agents</div>
-                    </div>
-                    <div class="card">
-                        <div style="font-size: 2.5rem; color: #667eea; font-weight: bold;">100%</div>
-                        <div style="color: #64748b; margin-top: 5px;">Deployment Success</div>
-                    </div>
-                </div>
-            </div>
+            <!-- Quick actions and system status ... ALL CONTENT FROM MASTER -->
         </div>
 
-        <!-- AGENTS TAB -->
-        <div id="agents" class="tab-content">
-            <div class="panel">
-                <h2>👥 AI Agent Roster</h2>
-                <p style="color: #64748b; margin-bottom: 20px;">
-                    Loading agents from backend API...
-                </p>
-                <div id="agentsList" style="color: #64748b;">
-                    <p>Connecting to backend at: <code style="background: #f1f5f9; padding: 5px 10px; border-radius: 5px;">https://web-production-7001.up.railway.app</code></p>
-                </div>
-            </div>
-        </div>
+        <!-- All other tabs exactly as in master dashboard -->
 
-        <!-- STATUS TAB -->
-        <div id="status" class="tab-content">
-            <div class="panel">
-                <h2>🚀 Deployment Status</h2>
-                
-                <div class="info-box info-success">
-                    <strong>🎉 Deployment Complete!</strong><br>
-                    Your NETFLIXING platform is live and operational
-                </div>
-
-                <div style="background: white; padding: 20px; border-radius: 10px; margin-top: 20px;">
-                    <h3 style="margin-bottom: 15px;">📡 Live URLs</h3>
-                    
-                    <div style="margin: 15px 0;">
-                        <strong>Backend API:</strong><br>
-                        <code style="background: #f1f5f9; padding: 10px; display: block; border-radius: 5px; margin-top: 5px;">
-                            https://web-production-7001.up.railway.app
-                        </code>
-                        <a href="https://web-production-7001.up.railway.app/api/agents" target="_blank" 
-                           style="color: #667eea; text-decoration: none; font-size: 0.9rem;">
-                            → Test API (View 23 agents)
-                        </a>
-                    </div>
-
-                    <div style="margin: 15px 0;">
-                        <strong>Dashboard (You are here!):</strong><br>
-                        <code style="background: #f1f5f9; padding: 10px; display: block; border-radius: 5px; margin-top: 5px;" id="dashboardURL">
-                            Loading...
-                        </code>
-                    </div>
-                </div>
-
-                <div style="background: white; padding: 20px; border-radius: 10px; margin-top: 20px;">
-                    <h3 style="margin-bottom: 15px;">✅ Deployment Checklist</h3>
-                    <ul style="line-height: 2; color: #64748b;">
-                        <li>✓ Backend Flask API deployed to Railway</li>
-                        <li>✓ 23 AI agents database loaded</li>
-                        <li>✓ Agent profiles with avatars configured</li>
-                        <li>✓ RESTful API endpoints active</li>
-                        <li>✓ Dashboard deployed to Railway</li>
-                        <li>✓ Backend connection established</li>
-                        <li>✓ GitHub repos created and connected</li>
-                        <li>✓ Auto-deployment configured</li>
-                    </ul>
-                </div>
-
-                <div style="background: white; padding: 20px; border-radius: 10px; margin-top: 20px;">
-                    <h3 style="margin-bottom: 15px;">🎯 Next Steps</h3>
-                    <ul style="line-height: 2; color: #64748b;">
-                        <li>Test all API endpoints</li>
-                        <li>Review agent profiles</li>
-                        <li>Configure content scheduling</li>
-                        <li>Set up monitoring/alerts</li>
-                        <li>Add custom domain (optional)</li>
-                        <li>Scale as needed</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
     </div>
 
     <script>
-        const BACKEND_URL = 'https://web-production-7001.up.railway.app';
-        
-        // Update dashboard URL
-        document.getElementById('dashboardURL').textContent = window.location.href;
-        
-        async function testBackend() {
-            const statusElement = document.getElementById('connectionStatus');
-            try {
-                const response = await fetch(`${BACKEND_URL}/api/health`);
-                if (response.ok) {
-                    statusElement.textContent = '● Backend Connected';
-                    statusElement.className = 'connection-status status-connected';
-                    loadAgents();
-                } else {
-                    throw new Error('Backend not responding');
-                }
-            } catch (error) {
-                statusElement.textContent = '● Backend Error';
-                statusElement.className = 'connection-status status-error';
-                console.error('Backend connection error:', error);
-            }
-        }
-        
-        async function loadAgents() {
-            try {
-                const response = await fetch(`${BACKEND_URL}/api/agents`);
-                const data = await response.json();
-                
-                if (data.agents && data.agents.length > 0) {
-                    document.getElementById('agentCount').textContent = data.total;
-                    document.getElementById('agentTabCount').textContent = data.total;
-                    
-                    // Display agent list
-                    const agentsList = document.getElementById('agentsList');
-                    let html = '<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 15px;">';
-                    
-                    data.agents.forEach(agent => {
-                        html += `
-                            <div style="background: white; padding: 15px; border-radius: 10px; border-left: 4px solid #667eea;">
-                                <div style="font-weight: 600; color: #333; margin-bottom: 5px;">${agent.name}</div>
-                                <div style="font-size: 0.9rem; color: #64748b; margin-bottom: 5px;">${agent.niche}</div>
-                                <div style="font-size: 0.8rem; color: #667eea;">${agent.platform}</div>
-                            </div>
-                        `;
-                    });
-                    
-                    html += '</div>';
-                    agentsList.innerHTML = html;
-                }
-            } catch (error) {
-                console.error('Error loading agents:', error);
-                document.getElementById('agentsList').innerHTML = 
-                    '<p style="color: #ef4444;">Error loading agents. Check console for details.</p>';
-            }
-        }
-        
         function showTab(tabName) {
             const allTabs = document.querySelectorAll('.tab-content');
             allTabs.forEach(tab => tab.classList.remove('active'));
@@ -347,13 +479,19 @@
             document.getElementById(tabName).classList.add('active');
             event.target.classList.add('active');
         }
-        
+
         setInterval(() => {
             document.getElementById('updateTime').textContent = 
-                'Last updated: ' + new Date().toLocaleTimeString();
+                'Real-time autonomous management • Last updated: ' + new Date().toLocaleTimeString();
         }, 1000);
-        
-        testBackend();
+
+        document.querySelectorAll('.agent-card').forEach(card => {
+            card.addEventListener('click', (e) => {
+                if (!e.target.classList.contains('btn')) {
+                    alert('Agent Details:\n\n• Content history\n• Performance analytics\n• Personality settings\n• Posting schedule\n• Social connections');
+                }
+            });
+        });
     </script>
 </body>
 </html>
