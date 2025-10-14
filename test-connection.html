@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Railway Backend Connection Test</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 800px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            color: #64748b;
+            margin-bottom: 30px;
+        }
+        
+        .test-section {
+            background: #f8fafc;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .test-section h2 {
+            font-size: 1.2rem;
+            color: #333;
+            margin-bottom: 15px;
+        }
+        
+        .status {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+            font-weight: 600;
+        }
+        
+        .status.pending {
+            background: #fef3c7;
+            color: #854d0e;
+        }
+        
+        .status.success {
+            background: #dcfce7;
+            color: #166534;
+        }
+        
+        .status.error {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+        
+        .status-icon {
+            font-size: 1.5rem;
+        }
+        
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            width: 100%;
+            margin-top: 10px;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+        
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .details {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            overflow-x: auto;
+            display: none;
+        }
+        
+        .details.show {
+            display: block;
+        }
+        
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(0,0,0,0.1);
+            border-top: 3px solid #854d0e;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .url {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 10px;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            margin: 10px 0;
+            word-break: break-all;
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin: 5px 5px 5px 0;
+        }
+        
+        .badge.info {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+        
+        .badge.success {
+            background: #dcfce7;
+            color: #166534;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔌 Railway Backend Connection Test</h1>
+        <p class="subtitle">Test your connection to the Netflixing Backend API</p>
+        
+        <div class="url">
+            https://web-production-7001.up.railway.app
+        </div>
+        
+        <!-- Test 1: Root Endpoint -->
+        <div class="test-section">
+            <h2>Test 1: Service Info</h2>
+            <div id="test1-status" class="status pending">
+                <span class="status-icon">⏳</span>
+                <span>Ready to test</span>
+            </div>
+            <button onclick="testRoot()">Test GET /</button>
+            <div id="test1-details" class="details"></div>
+        </div>
+        
+        <!-- Test 2: Health Check -->
+        <div class="test-section">
+            <h2>Test 2: Health Check</h2>
+            <div id="test2-status" class="status pending">
+                <span class="status-icon">⏳</span>
+                <span>Ready to test</span>
+            </div>
+            <button onclick="testHealth()">Test GET /api/health</button>
+            <div id="test2-details" class="details"></div>
+        </div>
+        
+        <!-- Test 3: Agents List -->
+        <div class="test-section">
+            <h2>Test 3: Agents List</h2>
+            <div id="test3-status" class="status pending">
+                <span class="status-icon">⏳</span>
+                <span>Ready to test</span>
+            </div>
+            <button onclick="testAgents()">Test GET /api/agents</button>
+            <div id="test3-details" class="details"></div>
+        </div>
+        
+        <!-- Test 4: Platforms -->
+        <div class="test-section">
+            <h2>Test 4: Platforms</h2>
+            <div id="test4-status" class="status pending">
+                <span class="status-icon">⏳</span>
+                <span>Ready to test</span>
+            </div>
+            <button onclick="testPlatforms()">Test GET /api/platforms</button>
+            <div id="test4-details" class="details"></div>
+        </div>
+        
+        <!-- Test All Button -->
+        <button onclick="testAll()" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); margin-top: 30px;">
+            🚀 Run All Tests
+        </button>
+    </div>
+    
+    <script>
+        const API_BASE_URL = 'https://web-production-7001.up.railway.app';
+        
+        function updateStatus(testId, status, message, data = null) {
+            const statusEl = document.getElementById(`test${testId}-status`);
+            const detailsEl = document.getElementById(`test${testId}-details`);
+            
+            statusEl.className = `status ${status}`;
+            
+            const icons = {
+                pending: '⏳',
+                testing: '<span class="spinner"></span>',
+                success: '✅',
+                error: '❌'
+            };
+            
+            statusEl.innerHTML = `
+                <span class="status-icon">${icons[status]}</span>
+                <span>${message}</span>
+            `;
+            
+            if (data) {
+                detailsEl.textContent = JSON.stringify(data, null, 2);
+                detailsEl.classList.add('show');
+            }
+        }
+        
+        async function testRoot() {
+            updateStatus(1, 'testing', 'Testing...');
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/`);
+                const data = await response.json();
+                
+                if (response.ok) {
+                    updateStatus(1, 'success', `✅ Connected! Version ${data.version}`, data);
+                } else {
+                    updateStatus(1, 'error', `❌ Error ${response.status}`, data);
+                }
+            } catch (error) {
+                updateStatus(1, 'error', `❌ Connection Failed: ${error.message}`);
+            }
+        }
+        
+        async function testHealth() {
+            updateStatus(2, 'testing', 'Testing...');
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/health`);
+                const data = await response.json();
+                
+                if (response.ok && data.status === 'healthy') {
+                    updateStatus(2, 'success', `✅ Healthy! ${data.agents_loaded} agents loaded`, data);
+                } else {
+                    updateStatus(2, 'error', `❌ Unhealthy`, data);
+                }
+            } catch (error) {
+                updateStatus(2, 'error', `❌ Connection Failed: ${error.message}`);
+            }
+        }
+        
+        async function testAgents() {
+            updateStatus(3, 'testing', 'Testing...');
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/agents`);
+                const data = await response.json();
+                
+                if (response.ok) {
+                    updateStatus(3, 'success', `✅ Found ${data.total} agents`, data);
+                } else {
+                    updateStatus(3, 'error', `❌ Error ${response.status}`, data);
+                }
+            } catch (error) {
+                updateStatus(3, 'error', `❌ Connection Failed: ${error.message}`);
+            }
+        }
+        
+        async function testPlatforms() {
+            updateStatus(4, 'testing', 'Testing...');
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/platforms`);
+                const data = await response.json();
+                
+                if (response.ok) {
+                    updateStatus(4, 'success', `✅ Found ${data.count} platforms: ${data.platforms.join(', ')}`, data);
+                } else {
+                    updateStatus(4, 'error', `❌ Error ${response.status}`, data);
+                }
+            } catch (error) {
+                updateStatus(4, 'error', `❌ Connection Failed: ${error.message}`);
+            }
+        }
+        
+        async function testAll() {
+            await testRoot();
+            await new Promise(resolve => setTimeout(resolve, 500));
+            await testHealth();
+            await new Promise(resolve => setTimeout(resolve, 500));
+            await testAgents();
+            await new Promise(resolve => setTimeout(resolve, 500));
+            await testPlatforms();
+        }
+    </script>
+</body>
+</html>

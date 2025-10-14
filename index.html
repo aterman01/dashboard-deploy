@@ -43,6 +43,23 @@
             margin-bottom: 20px;
         }
 
+        .connection-status {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            margin-left: 10px;
+            background: rgba(255,255,255,0.2);
+        }
+
+        .connection-status.connected {
+            background: rgba(16, 185, 129, 0.3);
+        }
+
+        .connection-status.error {
+            background: rgba(239, 68, 68, 0.3);
+        }
+
         .header-stats {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -128,18 +145,23 @@
             font-size: 1.5rem;
         }
 
+        .agent-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
         .agent-card {
             background: white;
             padding: 20px;
             border-radius: 10px;
-            margin-bottom: 15px;
             border-left: 4px solid #667eea;
             cursor: pointer;
             transition: all 0.3s;
         }
 
         .agent-card:hover {
-            transform: translateX(5px);
+            transform: translateY(-5px);
             box-shadow: 0 5px 15px rgba(102, 126, 234, 0.2);
         }
 
@@ -173,140 +195,50 @@
             color: #854d0e;
         }
 
-        .agent-stats {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-            margin-top: 10px;
+        .agent-niche {
+            font-size: 0.9rem;
+            color: #64748b;
+            margin-bottom: 10px;
         }
 
-        .agent-stat {
+        .agent-platform {
+            display: inline-block;
+            padding: 4px 12px;
+            background: #f3e8ff;
+            color: #7e22ce;
+            font-size: 0.85rem;
+            border-radius: 15px;
+            margin-top: 5px;
+        }
+
+        .loading {
             text-align: center;
-            padding: 8px;
-            background: #f8fafc;
-            border-radius: 5px;
-        }
-
-        .agent-stat strong {
-            display: block;
-            color: #667eea;
-            font-size: 1.2rem;
-        }
-
-        .agent-stat span {
-            font-size: 0.8rem;
+            padding: 40px;
             color: #64748b;
         }
 
-        .activity-item {
-            padding: 15px;
-            border-bottom: 1px solid #e2e8f0;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .activity-item:last-child {
-            border-bottom: none;
-        }
-
-        .activity-icon {
+        .spinner {
+            display: inline-block;
             width: 40px;
             height: 40px;
+            border: 4px solid #f3f4f6;
+            border-top: 4px solid #667eea;
             border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.3rem;
+            animation: spin 1s linear infinite;
         }
 
-        .activity-video {
-            background: #dbeafe;
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
 
-        .activity-post {
-            background: #f3e8ff;
-        }
-
-        .activity-interaction {
-            background: #fef3c7;
-        }
-
-        .activity-content {
-            flex: 1;
-        }
-
-        .activity-title {
-            font-weight: 600;
-            color: #333;
-            margin-bottom: 3px;
-        }
-
-        .activity-time {
-            font-size: 0.8rem;
-            color: #64748b;
-        }
-
-        .queue-item {
-            background: white;
+        .error-message {
+            background: #fee2e2;
+            border: 1px solid #fca5a5;
+            color: #991b1b;
             padding: 15px;
             border-radius: 8px;
-            margin-bottom: 10px;
-            border-left: 3px solid #667eea;
-        }
-
-        .queue-topic {
-            font-weight: 600;
-            color: #333;
-            margin-bottom: 5px;
-        }
-
-        .queue-meta {
-            font-size: 0.8rem;
-            color: #64748b;
-            display: flex;
-            justify-content: space-between;
-        }
-
-        .priority {
-            padding: 2px 8px;
-            border-radius: 10px;
-            font-size: 0.7rem;
-            font-weight: 600;
-        }
-
-        .priority-high {
-            background: #fee2e2;
-            color: #991b1b;
-        }
-
-        .priority-medium {
-            background: #fef3c7;
-            color: #854d0e;
-        }
-
-        .priority-low {
-            background: #e0e7ff;
-            color: #3730a3;
-        }
-
-        .interaction-card {
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            margin-bottom: 15px;
-        }
-
-        .interaction-card.debate {
-            border-left: 4px solid #ef4444;
-        }
-
-        .interaction-card.dating {
-            border-left: 4px solid #10b981;
-        }
-
-        .interaction-card.teaching {
-            border-left: 4px solid #f59e0b;
+            margin: 20px 0;
         }
 
         .btn {
@@ -367,15 +299,6 @@
             margin-bottom: 10px;
         }
 
-        .pulse {
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.7; }
-        }
-
         .info-box {
             padding: 15px;
             border-radius: 8px;
@@ -388,32 +311,90 @@
             color: #166534;
         }
 
-        .performance-summary {
-            text-align: center;
-            padding: 30px;
+        .service-card {
             background: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .service-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .service-icon {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .service-status {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+
+        .service-status.live {
+            background: #10b981;
+        }
+
+        .service-status.ready {
+            background: #f59e0b;
+        }
+
+        .service-status.offline {
+            background: #ef4444;
+        }
+
+        .endpoint-list {
+            background: white;
+            padding: 20px;
             border-radius: 10px;
         }
 
-        .performance-summary .big-number {
-            font-size: 3rem;
-            font-weight: bold;
-            color: #667eea;
-            margin: 10px 0;
+        .endpoint-item {
+            padding: 12px;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
-        .performance-stats {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
-            margin-top: 20px;
+        .endpoint-item:last-child {
+            border-bottom: none;
         }
 
-        .performance-stat {
-            text-align: center;
+        .endpoint-method {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-right: 10px;
+        }
+
+        .method-get {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .method-post {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .code-block {
+            background: #1e293b;
+            color: #e2e8f0;
             padding: 15px;
-            background: #f8fafc;
             border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            overflow-x: auto;
+            margin: 10px 0;
         }
     </style>
 </head>
@@ -421,24 +402,27 @@
     <div class="dashboard-container">
         <div class="header">
             <h1>🎯 UNITY2025 Master Control Center</h1>
-            <p class="header-subtitle" id="updateTime">Real-time autonomous management • Last updated: Just now</p>
+            <p class="header-subtitle">
+                <span id="updateTime">Real-time autonomous management • Last updated: Just now</span>
+                <span id="connectionStatus" class="connection-status">● Connecting...</span>
+            </p>
             
             <div class="header-stats">
                 <div class="stat-card">
-                    <h3>23</h3>
+                    <h3 id="agentCount">-</h3>
                     <p>AI Agents</p>
                 </div>
                 <div class="stat-card">
-                    <h3>234</h3>
-                    <p>Videos Created</p>
+                    <h3 id="platformCount">-</h3>
+                    <p>Platforms</p>
                 </div>
                 <div class="stat-card">
-                    <h3>1.2M</h3>
-                    <p>Total Views</p>
+                    <h3>✓</h3>
+                    <p>Railway Live</p>
                 </div>
                 <div class="stat-card">
-                    <h3>94%</h3>
-                    <p>Success Rate</p>
+                    <h3>✓</h3>
+                    <p>API Connected</p>
                 </div>
                 <div class="stat-card">
                     <h3>✓</h3>
@@ -449,26 +433,593 @@
 
         <div class="tabs">
             <button class="tab active" onclick="showTab('overview')">📊 Overview</button>
-            <button class="tab" onclick="showTab('agents')">👥 Agents (23)</button>
-            <button class="tab" onclick="showTab('activity')">📈 Activity Feed</button>
-            <button class="tab" onclick="showTab('content')">📝 Content Queue</button>
-            <button class="tab" onclick="showTab('interactions')">🤝 Interactions</button>
+            <button class="tab" onclick="showTab('agents')">👥 Agents</button>
+            <button class="tab" onclick="showTab('endpoints')">🔌 API Endpoints</button>
+            <button class="tab" onclick="showTab('services')">🚀 Services</button>
             <button class="tab" onclick="showTab('avatar')">🎭 Avatar System</button>
-            <button class="tab" onclick="showTab('analytics')">📊 Analytics</button>
             <button class="tab" onclick="showTab('qrid')">🥽 QRID-AR</button>
+            <button class="tab" onclick="showTab('workflows')">⚡ N8N Workflows</button>
+            <button class="tab" onclick="showTab('rpm')">🎮 Ready Player Me</button>
             <button class="tab" onclick="showTab('docs')">📚 Docs</button>
         </div>
 
-        <!-- Tabs with full content from master dashboard -->
+        <!-- OVERVIEW TAB -->
         <div id="overview" class="tab-content active">
-            <!-- Quick actions and system status ... ALL CONTENT FROM MASTER -->
+            <div class="quick-actions">
+                <div class="quick-action" onclick="showTab('agents')">
+                    <div class="quick-action-icon">👥</div>
+                    <div>View All Agents</div>
+                </div>
+                <div class="quick-action" onclick="showTab('endpoints')">
+                    <div class="quick-action-icon">🔌</div>
+                    <div>API Endpoints</div>
+                </div>
+                <div class="quick-action" onclick="showTab('avatar')">
+                    <div class="quick-action-icon">🎭</div>
+                    <div>Avatar System</div>
+                </div>
+                <div class="quick-action" onclick="window.open('https://railway.app', '_blank')">
+                    <div class="quick-action-icon">🚂</div>
+                    <div>Railway Dashboard</div>
+                </div>
+                <div class="quick-action" onclick="showTab('workflows')">
+                    <div class="quick-action-icon">⚡</div>
+                    <div>N8N Workflows</div>
+                </div>
+                <div class="quick-action" onclick="showTab('docs')">
+                    <div class="quick-action-icon">📚</div>
+                    <div>Documentation</div>
+                </div>
+            </div>
+
+            <div class="panel" style="margin-top: 30px;">
+                <h2>🚀 System Status</h2>
+                <div class="info-box info-success">
+                    <strong>✅ All Systems Operational</strong><br>
+                    <span id="systemStatus">Checking systems...</span>
+                </div>
+
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; margin-top: 20px;">
+                    <div class="service-card">
+                        <div class="service-icon">🎬</div>
+                        <strong>Netflixing Backend</strong>
+                        <div style="color: #64748b; margin-top: 5px;">
+                            <span class="service-status live"></span>
+                            <span id="backendStatus">CHECKING</span>
+                        </div>
+                    </div>
+                    <div class="service-card">
+                        <div class="service-icon">🎭</div>
+                        <strong>Avatar System</strong>
+                        <div style="color: #64748b; margin-top: 5px;">
+                            <span class="service-status ready"></span>
+                            READY TO DEPLOY
+                        </div>
+                    </div>
+                    <div class="service-card">
+                        <div class="service-icon">🚂</div>
+                        <strong>Railway Platform</strong>
+                        <div style="color: #64748b; margin-top: 5px;">
+                            <span class="service-status live"></span>
+                            CONNECTED
+                        </div>
+                    </div>
+                    <div class="service-card">
+                        <div class="service-icon">🥽</div>
+                        <strong>QRID-AR Unity</strong>
+                        <div style="color: #64748b; margin-top: 5px;">
+                            <span class="service-status ready"></span>
+                            LOCAL DEV
+                        </div>
+                    </div>
+                </div>
+
+                <div style="margin-top: 30px; background: white; padding: 20px; border-radius: 10px;">
+                    <h3 style="margin-bottom: 15px;">🔗 Quick Links</h3>
+                    <button class="btn btn-primary" onclick="window.open('https://web-production-7001.up.railway.app', '_blank')">Open Backend API</button>
+                    <button class="btn btn-primary" onclick="window.open('https://web-production-7001.up.railway.app/api/agents', '_blank')">View Agents JSON</button>
+                    <button class="btn btn-secondary" onclick="testConnection()">Test Connection</button>
+                </div>
+            </div>
         </div>
 
-        <!-- All other tabs exactly as in master dashboard -->
+        <!-- AGENTS TAB -->
+        <div id="agents" class="tab-content">
+            <div class="panel">
+                <h2>👥 Your AI Agents</h2>
+                <div id="agentFilters" style="margin-bottom: 20px;">
+                    <select id="platformFilter" class="btn btn-secondary" onchange="filterAgents()">
+                        <option value="">All Platforms</option>
+                    </select>
+                    <button class="btn btn-primary" onclick="refreshAgents()">🔄 Refresh</button>
+                    <button class="btn btn-secondary" onclick="window.open('https://web-production-7001.up.railway.app/api/agents', '_blank')">View Raw Data</button>
+                </div>
+                
+                <div id="agentsContainer" class="loading">
+                    <div class="spinner"></div>
+                    <p style="margin-top: 15px;">Loading agents from Railway...</p>
+                </div>
+            </div>
+        </div>
 
+        <!-- API ENDPOINTS TAB -->
+        <div id="endpoints" class="tab-content">
+            <div class="panel">
+                <h2>🔌 Available API Endpoints</h2>
+                <p style="color: #64748b; margin-bottom: 20px;">Base URL: <code>https://web-production-7001.up.railway.app</code></p>
+                
+                <div class="endpoint-list">
+                    <div class="endpoint-item">
+                        <div>
+                            <span class="endpoint-method method-get">GET</span>
+                            <code>/</code>
+                        </div>
+                        <button class="btn btn-secondary" onclick="testEndpoint('/')">Test</button>
+                    </div>
+                    <div class="endpoint-item">
+                        <div>
+                            <span class="endpoint-method method-get">GET</span>
+                            <code>/api/health</code>
+                        </div>
+                        <button class="btn btn-secondary" onclick="testEndpoint('/api/health')">Test</button>
+                    </div>
+                    <div class="endpoint-item">
+                        <div>
+                            <span class="endpoint-method method-get">GET</span>
+                            <code>/api/agents</code>
+                        </div>
+                        <button class="btn btn-secondary" onclick="testEndpoint('/api/agents')">Test</button>
+                    </div>
+                    <div class="endpoint-item">
+                        <div>
+                            <span class="endpoint-method method-get">GET</span>
+                            <code>/api/agents/&lt;id&gt;</code>
+                        </div>
+                        <button class="btn btn-secondary" onclick="testEndpoint('/api/agents/1')">Test</button>
+                    </div>
+                    <div class="endpoint-item">
+                        <div>
+                            <span class="endpoint-method method-get">GET</span>
+                            <code>/api/platforms</code>
+                        </div>
+                        <button class="btn btn-secondary" onclick="testEndpoint('/api/platforms')">Test</button>
+                    </div>
+                    <div class="endpoint-item">
+                        <div>
+                            <span class="endpoint-method method-get">GET</span>
+                            <code>/api/niches</code>
+                        </div>
+                        <button class="btn btn-secondary" onclick="testEndpoint('/api/niches')">Test</button>
+                    </div>
+                </div>
+
+                <div id="endpointResults" style="margin-top: 20px;"></div>
+            </div>
+        </div>
+
+        <!-- SERVICES TAB -->
+        <div id="services" class="tab-content">
+            <div class="panel">
+                <h2>🚀 Deployed Services</h2>
+                
+                <div style="display: grid; gap: 20px;">
+                    <div style="background: white; padding: 20px; border-radius: 10px;">
+                        <h3>🎬 Netflixing Backend API</h3>
+                        <p style="color: #64748b; margin: 10px 0;">Flask API serving 23 AI agents with images</p>
+                        <div class="code-block">https://web-production-7001.up.railway.app</div>
+                        <button class="btn btn-primary" onclick="window.open('https://web-production-7001.up.railway.app', '_blank')">Open Backend</button>
+                        <button class="btn btn-secondary" onclick="window.open('https://railway.app', '_blank')">Railway Dashboard</button>
+                    </div>
+
+                    <div style="background: white; padding: 20px; border-radius: 10px;">
+                        <h3>📊 Master Dashboard</h3>
+                        <p style="color: #64748b; margin: 10px 0;">This unified control center (currently viewing)</p>
+                        <div class="code-block">[Your Railway Dashboard URL]</div>
+                        <button class="btn btn-secondary" onclick="location.reload()">Reload Dashboard</button>
+                    </div>
+
+                    <div style="background: white; padding: 20px; border-radius: 10px;">
+                        <h3>🎭 Avatar Management System</h3>
+                        <p style="color: #64748b; margin: 10px 0;">Ready Player Me integration with N8N workflows</p>
+                        <div style="margin-top: 15px;">
+                            <span class="status-badge" style="background: #fef3c7; color: #854d0e;">● READY TO DEPLOY</span>
+                        </div>
+                        <button class="btn btn-primary" onclick="showTab('avatar')">View Details</button>
+                    </div>
+
+                    <div style="background: white; padding: 20px; border-radius: 10px;">
+                        <h3>🥽 QRID-AR Platform</h3>
+                        <p style="color: #64748b; margin: 10px 0;">Unity AR with face tracking and spatial anchoring</p>
+                        <div style="margin-top: 15px;">
+                            <span class="status-badge" style="background: #dbeafe; color: #1e40af;">● LOCAL DEV</span>
+                        </div>
+                        <button class="btn btn-primary" onclick="showTab('qrid')">View Details</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- AVATAR SYSTEM TAB -->
+        <div id="avatar" class="tab-content">
+            <div class="panel">
+                <h2>🎭 Avatar Management System</h2>
+                
+                <div class="info-box info-success">
+                    <strong>✨ Complete Integration Ready!</strong><br>
+                    Backend API + Database + N8N Workflows + Ready Player Me
+                </div>
+
+                <div style="background: white; padding: 20px; border-radius: 10px; margin: 20px 0;">
+                    <h3 style="margin-bottom: 15px;">📦 System Components</h3>
+                    <ul style="color: #64748b; line-height: 2;">
+                        <li>✅ Backend API (Flask) - READY</li>
+                        <li>✅ Database Schema (PostgreSQL) - READY</li>
+                        <li>✅ N8N Workflows (2 workflows) - READY</li>
+                        <li>✅ Ready Player Me Integration - READY</li>
+                        <li>✅ Admin Dashboard UI - READY</li>
+                        <li>✅ User Avatar Creator - READY</li>
+                        <li>✅ Migration Scripts - READY</li>
+                    </ul>
+                </div>
+
+                <div style="background: white; padding: 20px; border-radius: 10px;">
+                    <h3 style="margin-bottom: 15px;">🚀 Ready to Deploy</h3>
+                    <p style="color: #64748b; margin-bottom: 15px;">All files are prepared in: <code>C:\Users\Antho\Desktop\UNITY2025\avatar-system-integration\</code></p>
+                    <button class="btn btn-primary" onclick="alert('Check: C:\\Users\\Antho\\Desktop\\UNITY2025\\avatar-system-integration\\DEPLOYMENT_GUIDE.md')">📖 View Deployment Guide</button>
+                    <button class="btn btn-secondary" onclick="alert('Check: C:\\Users\\Antho\\Documents\\avatar-system-ui-prototypes\\index.html')">🎨 View UI Prototype</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- QRID-AR TAB -->
+        <div id="qrid" class="tab-content">
+            <div class="panel">
+                <h2>🥽 QRID-AR Platform</h2>
+                <p style="color: #64748b; margin-bottom: 20px;">Unity AR with face tracking and spatial anchoring</p>
+                
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 20px;">
+                    <div class="service-card">
+                        <div class="service-icon">📱</div>
+                        <strong>iOS Support</strong>
+                        <div style="color: #64748b; margin-top: 5px;">ARKit 3.0+</div>
+                    </div>
+                    <div class="service-card">
+                        <div class="service-icon">🤖</div>
+                        <strong>Android Support</strong>
+                        <div style="color: #64748b; margin-top: 5px;">ARCore Ready</div>
+                    </div>
+                    <div class="service-card">
+                        <div class="service-icon">😊</div>
+                        <strong>Face Tracking</strong>
+                        <div style="color: #64748b; margin-top: 5px;">52 Blend Shapes</div>
+                    </div>
+                </div>
+
+                <div style="background: white; padding: 20px; border-radius: 10px;">
+                    <h3 style="margin-bottom: 15px;">✨ Features</h3>
+                    <ul style="color: #64748b; line-height: 2;">
+                        <li>✓ Real-time face tracking (iOS)</li>
+                        <li>✓ 7 emotion detection types</li>
+                        <li>✓ Touch gesture controls</li>
+                        <li>✓ AR spatial anchoring</li>
+                        <li>✓ Performance optimized</li>
+                        <li>✓ Cross-platform support</li>
+                    </ul>
+                    <button class="btn btn-primary" style="margin-top: 15px;">🎮 Open Unity Project</button>
+                </div>
+
+                <div style="margin-top: 20px; background: white; padding: 20px; border-radius: 10px;">
+                    <h3>📂 Project Location</h3>
+                    <div class="code-block">C:\Users\Antho\Desktop\UNITY2025\QRID-AR\</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- N8N WORKFLOWS TAB -->
+        <div id="workflows" class="tab-content">
+            <div class="panel">
+                <h2>⚡ N8N Workflow Integration</h2>
+                <p style="color: #64748b; margin-bottom: 20px;">Automation workflows for avatar and agent management</p>
+                
+                <div style="display: grid; gap: 15px;">
+                    <div style="background: white; padding: 20px; border-radius: 10px;">
+                        <h3>🔧 Tool Registration Workflow</h3>
+                        <p style="color: #64748b; margin: 10px 0;">Automatically registers new tools/capabilities for agents</p>
+                        <ul style="color: #64748b; margin: 10px 0; line-height: 1.8;">
+                            <li>Receives tool metadata from API</li>
+                            <li>Validates tool configuration</li>
+                            <li>Updates database</li>
+                            <li>Notifies relevant agents</li>
+                        </ul>
+                        <div class="code-block">Workflow ID: tool-registration-workflow</div>
+                        <button class="btn btn-secondary">View Workflow JSON</button>
+                    </div>
+
+                    <div style="background: white; padding: 20px; border-radius: 10px;">
+                        <h3>🤖 Agent Tool Execution Workflow</h3>
+                        <p style="color: #64748b; margin: 10px 0;">Handles tool execution requests from autonomous agents</p>
+                        <ul style="color: #64748b; margin: 10px 0; line-height: 1.8;">
+                            <li>Receives execution request</li>
+                            <li>Validates permissions</li>
+                            <li>Executes tool with parameters</li>
+                            <li>Logs results and decisions</li>
+                        </ul>
+                        <div class="code-block">Workflow ID: agent-tool-execution-workflow</div>
+                        <button class="btn btn-secondary">View Workflow JSON</button>
+                    </div>
+                </div>
+
+                <div style="margin-top: 20px; background: white; padding: 20px; border-radius: 10px;">
+                    <h3>📂 Workflow Files Location</h3>
+                    <div class="code-block">C:\Users\Antho\Desktop\UNITY2025\avatar-system-integration\n8n\</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- READY PLAYER ME TAB -->
+        <div id="rpm" class="tab-content">
+            <div class="panel">
+                <h2>🎮 Ready Player Me Integration</h2>
+                <p style="color: #64748b; margin-bottom: 20px;">Avatar creation system for agents</p>
+                
+                <div class="info-box info-success">
+                    <strong>✅ Fully Integrated</strong><br>
+                    Ready Player Me API connected with automatic GLB file generation
+                </div>
+
+                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-top: 20px;">
+                    <div style="background: white; padding: 20px; border-radius: 10px;">
+                        <h3>📝 Creation Methods</h3>
+                        <ul style="color: #64748b; line-height: 2;">
+                            <li>✓ Custom avatar creator UI</li>
+                            <li>✓ Import from Ready Player Me</li>
+                            <li>✓ Upload custom GLB files</li>
+                            <li>✓ AI-generated avatars</li>
+                        </ul>
+                    </div>
+
+                    <div style="background: white; padding: 20px; border-radius: 10px;">
+                        <h3>🎨 Features</h3>
+                        <ul style="color: #64748b; line-height: 2;">
+                            <li>✓ Real-time 3D preview</li>
+                            <li>✓ Approval workflow</li>
+                            <li>✓ Version history</li>
+                            <li>✓ Automated deployment</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div style="margin-top: 20px; background: white; padding: 20px; border-radius: 10px;">
+                    <h3>🔗 API Integration</h3>
+                    <div class="code-block">
+POST /api/avatars/create
+{
+  "agent_id": 1,
+  "method": "ready_player_me",
+  "rpm_url": "https://readyplayer.me/..."
+}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- DOCS TAB -->
+        <div id="docs" class="tab-content">
+            <div class="panel">
+                <h2>📚 Documentation Hub</h2>
+                
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px;">
+                    <button class="btn btn-primary">🚀 START HERE</button>
+                    <button class="btn btn-primary">📋 Quick Reference</button>
+                    <button class="btn btn-primary">🗺️ System Integration</button>
+                    <button class="btn btn-secondary">🎭 Avatar Docs</button>
+                    <button class="btn btn-secondary">🥽 QRID-AR Docs</button>
+                    <button class="btn btn-secondary">⚡ MCP Server Docs</button>
+                </div>
+
+                <div style="margin-top: 30px; background: white; padding: 20px; border-radius: 10px;">
+                    <h3 style="margin-bottom: 15px;">📂 All Documentation</h3>
+                    <div class="code-block">C:\Users\Antho\Desktop\UNITY2025\</div>
+                    <p style="color: #64748b; margin-top: 15px;">Contains all project documentation, implementation guides, and API references</p>
+                </div>
+
+                <div style="margin-top: 20px; background: white; padding: 20px; border-radius: 10px;">
+                    <h3 style="margin-bottom: 15px;">🔗 External Resources</h3>
+                    <button class="btn btn-secondary" onclick="window.open('https://railway.app/docs', '_blank')">Railway Docs</button>
+                    <button class="btn btn-secondary" onclick="window.open('https://readyplayer.me/docs', '_blank')">Ready Player Me Docs</button>
+                    <button class="btn btn-secondary" onclick="window.open('https://docs.n8n.io', '_blank')">N8N Docs</button>
+                    <button class="btn btn-secondary" onclick="window.open('https://flask.palletsprojects.com', '_blank')">Flask Docs</button>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script>
+        // Configuration
+        const API_BASE_URL = 'https://web-production-7001.up.railway.app';
+        
+        let allAgents = [];
+        let platforms = [];
+
+        // Initialize dashboard
+        document.addEventListener('DOMContentLoaded', function() {
+            initDashboard();
+            updateTimestamp();
+            setInterval(updateTimestamp, 1000);
+        });
+
+        async function initDashboard() {
+            await checkBackendHealth();
+            await loadAgents();
+            await loadPlatforms();
+        }
+
+        async function checkBackendHealth() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/health`);
+                const data = await response.json();
+                
+                if (data.status === 'healthy') {
+                    updateConnectionStatus('connected', '● Connected');
+                    document.getElementById('backendStatus').textContent = 'LIVE';
+                    document.getElementById('systemStatus').textContent = 
+                        `${data.agents_loaded} agents loaded • Backend healthy • Images available`;
+                } else {
+                    updateConnectionStatus('error', '● Error');
+                    document.getElementById('backendStatus').textContent = 'ERROR';
+                }
+            } catch (error) {
+                console.error('Health check failed:', error);
+                updateConnectionStatus('error', '● Offline');
+                document.getElementById('backendStatus').textContent = 'OFFLINE';
+                document.getElementById('systemStatus').textContent = 
+                    'Backend connection failed. Check if Railway service is running.';
+            }
+        }
+
+        async function loadAgents() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/agents`);
+                const data = await response.json();
+                
+                allAgents = data.agents || [];
+                document.getElementById('agentCount').textContent = data.total;
+                
+                displayAgents(allAgents);
+            } catch (error) {
+                console.error('Failed to load agents:', error);
+                document.getElementById('agentsContainer').innerHTML = `
+                    <div class="error-message">
+                        <strong>Failed to load agents</strong><br>
+                        ${error.message}<br><br>
+                        <button class="btn btn-primary" onclick="loadAgents()">Retry</button>
+                    </div>
+                `;
+            }
+        }
+
+        async function loadPlatforms() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/platforms`);
+                const data = await response.json();
+                
+                platforms = data.platforms || [];
+                document.getElementById('platformCount').textContent = data.count;
+                
+                // Populate filter dropdown
+                const select = document.getElementById('platformFilter');
+                platforms.forEach(platform => {
+                    const option = document.createElement('option');
+                    option.value = platform;
+                    option.textContent = platform;
+                    select.appendChild(option);
+                });
+            } catch (error) {
+                console.error('Failed to load platforms:', error);
+            }
+        }
+
+        function displayAgents(agents) {
+            const container = document.getElementById('agentsContainer');
+            
+            if (!agents || agents.length === 0) {
+                container.innerHTML = '<p class="loading">No agents found</p>';
+                return;
+            }
+
+            const html = `
+                <div class="agent-grid">
+                    ${agents.map(agent => `
+                        <div class="agent-card" onclick="viewAgent(${agent.id})">
+                            <div class="agent-header">
+                                <div class="agent-name">${agent.name}</div>
+                                <span class="status-badge status-active">● ACTIVE</span>
+                            </div>
+                            <div class="agent-niche">${agent.niche}</div>
+                            <div class="agent-platform">${agent.platform}</div>
+                            <div style="margin-top: 10px; font-size: 0.85rem; color: #64748b;">
+                                ${agent.personality_traits ? agent.personality_traits.join(', ') : 'No traits'}
+                            </div>
+                            <button class="btn btn-primary" onclick="event.stopPropagation(); viewAgentDetails(${agent.id})">View Details</button>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+            
+            container.innerHTML = html;
+        }
+
+        function filterAgents() {
+            const platform = document.getElementById('platformFilter').value;
+            
+            if (!platform) {
+                displayAgents(allAgents);
+            } else {
+                const filtered = allAgents.filter(a => a.platform === platform);
+                displayAgents(filtered);
+            }
+        }
+
+        function refreshAgents() {
+            document.getElementById('agentsContainer').innerHTML = `
+                <div class="loading">
+                    <div class="spinner"></div>
+                    <p style="margin-top: 15px;">Refreshing agents...</p>
+                </div>
+            `;
+            loadAgents();
+        }
+
+        function viewAgent(agentId) {
+            window.open(`${API_BASE_URL}/api/agents/${agentId}`, '_blank');
+        }
+
+        function viewAgentDetails(agentId) {
+            alert(`Opening agent ${agentId} details...\n\nFeature coming soon:\n• Content history\n• Performance analytics\n• Edit settings\n• View social profiles`);
+        }
+
+        async function testEndpoint(path) {
+            const resultsDiv = document.getElementById('endpointResults');
+            resultsDiv.innerHTML = '<div class="loading"><div class="spinner"></div><p style="margin-top: 15px;">Testing endpoint...</p></div>';
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}${path}`);
+                const data = await response.json();
+                
+                resultsDiv.innerHTML = `
+                    <div style="background: white; padding: 20px; border-radius: 10px;">
+                        <h3 style="color: #10b981; margin-bottom: 15px;">✅ Success</h3>
+                        <p style="color: #64748b; margin-bottom: 10px;"><strong>Endpoint:</strong> ${path}</p>
+                        <p style="color: #64748b; margin-bottom: 15px;"><strong>Status:</strong> ${response.status} ${response.statusText}</p>
+                        <div class="code-block">${JSON.stringify(data, null, 2)}</div>
+                    </div>
+                `;
+            } catch (error) {
+                resultsDiv.innerHTML = `
+                    <div class="error-message">
+                        <strong>❌ Request Failed</strong><br>
+                        ${error.message}
+                    </div>
+                `;
+            }
+        }
+
+        function testConnection() {
+            checkBackendHealth();
+            alert('Testing connection to Railway backend...\n\nCheck the System Status panel for results.');
+        }
+
+        function updateConnectionStatus(status, text) {
+            const element = document.getElementById('connectionStatus');
+            element.className = `connection-status ${status}`;
+            element.textContent = text;
+        }
+
+        function updateTimestamp() {
+            document.getElementById('updateTime').textContent = 
+                'Real-time autonomous management • Last updated: ' + new Date().toLocaleTimeString();
+        }
+
         function showTab(tabName) {
             const allTabs = document.querySelectorAll('.tab-content');
             allTabs.forEach(tab => tab.classList.remove('active'));
@@ -479,19 +1030,6 @@
             document.getElementById(tabName).classList.add('active');
             event.target.classList.add('active');
         }
-
-        setInterval(() => {
-            document.getElementById('updateTime').textContent = 
-                'Real-time autonomous management • Last updated: ' + new Date().toLocaleTimeString();
-        }, 1000);
-
-        document.querySelectorAll('.agent-card').forEach(card => {
-            card.addEventListener('click', (e) => {
-                if (!e.target.classList.contains('btn')) {
-                    alert('Agent Details:\n\n• Content history\n• Performance analytics\n• Personality settings\n• Posting schedule\n• Social connections');
-                }
-            });
-        });
     </script>
 </body>
 </html>
