@@ -396,6 +396,86 @@
             overflow-x: auto;
             margin: 10px 0;
         }
+
+        /* Avatar Management Styles */
+        .avatar-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .avatar-card {
+            background: #f8fafc;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+        }
+
+        .avatar-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.2);
+            border-color: #667eea;
+        }
+
+        .avatar-preview {
+            width: 100%;
+            height: 200px;
+            border-radius: 8px;
+            object-fit: cover;
+            margin-bottom: 10px;
+            background: white;
+        }
+
+        .avatar-info {
+            text-align: left;
+        }
+
+        .avatar-name {
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: #1e293b;
+        }
+
+        .avatar-status {
+            font-size: 0.85rem;
+            padding: 4px 10px;
+            border-radius: 12px;
+            display: inline-block;
+            margin-top: 8px;
+        }
+
+        .status-pending {
+            background: #fef3c7;
+            color: #854d0e;
+        }
+
+        .status-approved {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .status-assigned {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+
+        #avatarModal.active {
+            display: flex !important;
+        }
     </style>
 </head>
 <body>
@@ -639,34 +719,135 @@
             </div>
         </div>
 
-        <!-- AVATAR SYSTEM TAB -->
+        <!-- AVATAR MANAGEMENT TAB - Complete Implementation -->
         <div id="avatar" class="tab-content">
             <div class="panel">
                 <h2>🎭 Avatar Management System</h2>
                 
-                <div class="info-box info-success">
-                    <strong>✨ Complete Integration Ready!</strong><br>
-                    Backend API + Database + N8N Workflows + Ready Player Me
+                <!-- Quick Stats -->
+                <div class="header-stats" style="margin-bottom: 30px;">
+                    <div class="stat-card">
+                        <h3 id="totalAvatars">0</h3>
+                        <p>Total Avatars</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3 id="pendingAvatars">0</h3>
+                        <p>Pending Approval</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3 id="assignedAvatars">0</h3>
+                        <p>Assigned</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3 id="rpmConnected">✓</h3>
+                        <p>RPM Connected</p>
+                    </div>
                 </div>
 
-                <div style="background: white; padding: 20px; border-radius: 10px; margin: 20px 0;">
-                    <h3 style="margin-bottom: 15px;">📦 System Components</h3>
-                    <ul style="color: #64748b; line-height: 2;">
-                        <li>✅ Backend API (Flask) - READY</li>
-                        <li>✅ Database Schema (PostgreSQL) - READY</li>
-                        <li>✅ N8N Workflows (2 workflows) - READY</li>
-                        <li>✅ Ready Player Me Integration - READY</li>
-                        <li>✅ Admin Dashboard UI - READY</li>
-                        <li>✅ User Avatar Creator - READY</li>
-                        <li>✅ Migration Scripts - READY</li>
-                    </ul>
+                <!-- Avatar Creation Section -->
+                <div style="background: white; padding: 25px; border-radius: 10px; margin-bottom: 20px;">
+                    <h3 style="margin-bottom: 20px;">➕ Create New Avatar</h3>
+                    
+                    <!-- Creation Method Tabs -->
+                    <div style="display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 2px solid #e5e7eb; padding-bottom: 10px;">
+                        <button class="btn btn-secondary" id="methodPhoto" onclick="switchCreationMethod('photo')" style="border-bottom: 3px solid #667eea;">
+                            📸 From Photo
+                        </button>
+                        <button class="btn btn-secondary" id="methodImport" onclick="switchCreationMethod('import')">
+                            🔗 Import URL
+                        </button>
+                    </div>
+
+                    <!-- Photo Upload Method -->
+                    <div id="createPhoto" class="creation-method">
+                        <div style="display: grid; gap: 15px;">
+                            <div class="form-group">
+                                <label><strong>Select Agent:</strong></label>
+                                <select id="photoAgentSelect" class="btn btn-secondary" style="width: 100%;">
+                                    <option value="">Choose agent...</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label><strong>Photo URL:</strong></label>
+                                <input type="text" id="photoUrl" placeholder="https://example.com/photo.jpg" 
+                                       style="width: 100%; padding: 10px; border: 1px solid #e5e7eb; border-radius: 8px;">
+                                <small style="color: #64748b;">Paste a direct link to a photo</small>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label><strong>Gender:</strong></label>
+                                <select id="photoGender" class="btn btn-secondary">
+                                    <option value="male">Male</option>
+                                    <option value="female">Female</option>
+                                </select>
+                            </div>
+                            
+                            <button class="btn btn-primary" onclick="createAvatarFromPhoto()">
+                                🎨 Generate Avatar from Photo
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Import URL Method -->
+                    <div id="createImport" class="creation-method" style="display: none;">
+                        <div style="display: grid; gap: 15px;">
+                            <div class="form-group">
+                                <label><strong>Select Agent:</strong></label>
+                                <select id="importAgentSelect" class="btn btn-secondary" style="width: 100%;">
+                                    <option value="">Choose agent...</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label><strong>Ready Player Me URL:</strong></label>
+                                <input type="text" id="rpmUrl" placeholder="https://models.readyplayer.me/xxxxx.glb" 
+                                       style="width: 100%; padding: 10px; border: 1px solid #e5e7eb; border-radius: 8px;">
+                                <small style="color: #64748b;">Paste the complete .glb URL from Ready Player Me</small>
+                            </div>
+                            
+                            <button class="btn btn-primary" onclick="importAvatarFromUrl()">
+                                📥 Import Avatar
+                            </button>
+                        </div>
+                    </div>
                 </div>
 
+                <!-- Avatar Gallery -->
+                <div style="background: white; padding: 25px; border-radius: 10px; margin-bottom: 20px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                        <h3>🖼️ Avatar Gallery</h3>
+                        <button class="btn btn-secondary" onclick="refreshAvatarGallery()">🔄 Refresh</button>
+                    </div>
+                    
+                    <div id="avatarGallery" class="avatar-grid">
+                        <div class="loading">
+                            <div class="spinner"></div>
+                            <p style="margin-top: 15px;">Loading avatars...</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- API Status -->
                 <div style="background: white; padding: 20px; border-radius: 10px;">
-                    <h3 style="margin-bottom: 15px;">🚀 Ready to Deploy</h3>
-                    <p style="color: #64748b; margin-bottom: 15px;">All files are prepared in: <code>C:\Users\Antho\Desktop\UNITY2025\avatar-system-integration\</code></p>
-                    <button class="btn btn-primary" onclick="alert('Check: C:\\Users\\Antho\\Desktop\\UNITY2025\\avatar-system-integration\\DEPLOYMENT_GUIDE.md')">📖 View Deployment Guide</button>
-                    <button class="btn btn-secondary" onclick="alert('Check: C:\\Users\\Antho\\Documents\\avatar-system-ui-prototypes\\index.html')">🎨 View UI Prototype</button>
+                    <h3 style="margin-bottom: 15px;">🔌 API Status</h3>
+                    <div id="rpmApiStatus" style="color: #64748b;">
+                        Checking connection...
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Avatar Preview Modal -->
+        <div id="avatarModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 10000; align-items: center; justify-content: center;">
+            <div style="background: white; border-radius: 15px; padding: 30px; max-width: 600px; width: 90%; max-height: 90vh; overflow-y: auto;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h2 id="modalTitle">Avatar Details</h2>
+                    <button class="btn btn-secondary" onclick="closeAvatarModal()">✕</button>
+                </div>
+                
+                <div id="modalContent">
+                    <!-- Content will be loaded here -->
                 </div>
             </div>
         </div>
@@ -1029,7 +1210,305 @@ POST /api/avatars/create
             
             document.getElementById(tabName).classList.add('active');
             event.target.classList.add('active');
+            
+            // Initialize avatar system when avatar tab is opened
+            if (tabName === 'avatar') {
+                setTimeout(initAvatarSystem, 100);
+            }
         }
+
+        // ========================================================================
+        // AVATAR MANAGEMENT SYSTEM
+        // ========================================================================
+
+        let allAvatars = [];
+
+        // Initialize avatar system
+        async function initAvatarSystem() {
+            await loadAvatarStats();
+            await loadAgentsForDropdown();
+            await loadAvatarGallery();
+            await checkRPMStatus();
+        }
+
+        // Load avatar statistics
+        async function loadAvatarStats() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/rpm/stats`);
+                const data = await response.json();
+                
+                document.getElementById('totalAvatars').textContent = data.total_avatars || 0;
+                document.getElementById('pendingAvatars').textContent = data.by_status?.pending || 0;
+                document.getElementById('assignedAvatars').textContent = data.by_status?.assigned || 0;
+                document.getElementById('rpmConnected').textContent = data.api_configured ? '✓' : '✗';
+            } catch (error) {
+                console.error('Failed to load avatar stats:', error);
+            }
+        }
+
+        // Load agents for dropdown
+        async function loadAgentsForDropdown() {
+            try {
+                const photoSelect = document.getElementById('photoAgentSelect');
+                const importSelect = document.getElementById('importAgentSelect');
+                
+                if (!photoSelect || !importSelect) return;
+                
+                allAgents.forEach(agent => {
+                    const option = document.createElement('option');
+                    option.value = agent.id;
+                    option.textContent = `${agent.name} - ${agent.niche}`;
+                    photoSelect.appendChild(option.cloneNode(true));
+                    importSelect.appendChild(option);
+                });
+            } catch (error) {
+                console.error('Failed to load agents for dropdown:', error);
+            }
+        }
+
+        // Switch creation method
+        function switchCreationMethod(method) {
+            document.getElementById('methodPhoto').style.borderBottom = method === 'photo' ? '3px solid #667eea' : 'none';
+            document.getElementById('methodImport').style.borderBottom = method === 'import' ? '3px solid #667eea' : 'none';
+            
+            document.getElementById('createPhoto').style.display = method === 'photo' ? 'block' : 'none';
+            document.getElementById('createImport').style.display = method === 'import' ? 'block' : 'none';
+        }
+
+        // Create avatar from photo
+        async function createAvatarFromPhoto() {
+            const agentId = document.getElementById('photoAgentSelect').value;
+            const photoUrl = document.getElementById('photoUrl').value;
+            const gender = document.getElementById('photoGender').value;
+            
+            if (!agentId) {
+                alert('Please select an agent');
+                return;
+            }
+            
+            if (!photoUrl) {
+                alert('Please enter a photo URL');
+                return;
+            }
+            
+            const agent = allAgents.find(a => a.id == agentId);
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/rpm/create/photo`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        photo_url: photoUrl,
+                        agent_id: parseInt(agentId),
+                        agent_name: agent.name,
+                        gender: gender
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    alert('✅ Avatar created successfully!');
+                    await refreshAvatarGallery();
+                    await loadAvatarStats();
+                    document.getElementById('photoUrl').value = '';
+                } else {
+                    alert('❌ Failed to create avatar: ' + (data.error || 'Unknown error'));
+                }
+            } catch (error) {
+                alert('❌ Error creating avatar: ' + error.message);
+            }
+        }
+
+        // Import avatar from URL
+        async function importAvatarFromUrl() {
+            const agentId = document.getElementById('importAgentSelect').value;
+            const rpmUrl = document.getElementById('rpmUrl').value;
+            
+            if (!agentId) {
+                alert('Please select an agent');
+                return;
+            }
+            
+            if (!rpmUrl) {
+                alert('Please enter a Ready Player Me URL');
+                return;
+            }
+            
+            const agent = allAgents.find(a => a.id == agentId);
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/rpm/create/import`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        rpm_url: rpmUrl,
+                        agent_id: parseInt(agentId),
+                        agent_name: agent.name
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    alert('✅ Avatar imported and assigned!');
+                    await refreshAvatarGallery();
+                    await loadAvatarStats();
+                    document.getElementById('rpmUrl').value = '';
+                } else {
+                    alert('❌ Failed to import avatar: ' + (data.error || 'Unknown error'));
+                }
+            } catch (error) {
+                alert('❌ Error importing avatar: ' + error.message);
+            }
+        }
+
+        // Load avatar gallery
+        async function loadAvatarGallery() {
+            const gallery = document.getElementById('avatarGallery');
+            if (!gallery) return;
+            
+            gallery.innerHTML = '<div class="loading"><div class="spinner"></div><p style="margin-top: 15px;">Loading avatars...</p></div>';
+            
+            try {
+                // Get all agents - avatars will be included in agent data
+                await loadAgents(); // This will populate allAgents
+                
+                const agentsWithAvatars = allAgents.filter(a => a.avatar_id);
+                allAvatars = agentsWithAvatars;
+                
+                if (agentsWithAvatars.length === 0) {
+                    gallery.innerHTML = `
+                        <div style="grid-column: 1/-1; text-align: center; padding: 40px; color: #64748b;">
+                            <h3>No avatars yet</h3>
+                            <p>Create your first avatar using the form above!</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                gallery.innerHTML = agentsWithAvatars.map(agent => `
+                    <div class="avatar-card" onclick="viewAvatarDetails(${agent.id})">
+                        <img src="${agent.avatar?.thumbnail_url || 'https://via.placeholder.com/200'}" 
+                             class="avatar-preview" 
+                             alt="${agent.name}"
+                             onerror="this.src='https://via.placeholder.com/200?text=Avatar'">
+                        <div class="avatar-info">
+                            <div class="avatar-name">${agent.name}</div>
+                            <div style="font-size: 0.85rem; color: #64748b;">${agent.niche}</div>
+                            <span class="avatar-status status-${agent.avatar?.status || 'assigned'}">
+                                ${(agent.avatar?.status || 'assigned').toUpperCase()}
+                            </span>
+                        </div>
+                    </div>
+                `).join('');
+                
+            } catch (error) {
+                console.error('Failed to load avatars:', error);
+                gallery.innerHTML = '<div class="error-message">Failed to load avatars</div>';
+            }
+        }
+
+        // View avatar details
+        function viewAvatarDetails(agentId) {
+            const agent = allAvatars.find(a => a.id === agentId);
+            if (!agent) return;
+            
+            const modal = document.getElementById('avatarModal');
+            const content = document.getElementById('modalContent');
+            
+            content.innerHTML = `
+                <div style="text-align: center; margin-bottom: 20px;">
+                    <img src="${agent.avatar?.thumbnail_url || 'https://via.placeholder.com/300'}" 
+                         style="max-width: 100%; border-radius: 10px; margin-bottom: 15px;">
+                </div>
+                
+                <div style="background: #f8fafc; padding: 20px; border-radius: 10px; margin-bottom: 15px;">
+                    <h3 style="margin-bottom: 10px;">${agent.name}</h3>
+                    <p style="color: #64748b; margin-bottom: 15px;">${agent.niche}</p>
+                    
+                    <div style="display: grid; gap: 10px;">
+                        <div><strong>Platform:</strong> ${agent.platform}</div>
+                        <div><strong>Status:</strong> <span class="avatar-status status-${agent.avatar?.status || 'assigned'}">${(agent.avatar?.status || 'assigned').toUpperCase()}</span></div>
+                        <div><strong>Avatar ID:</strong> <code>${agent.avatar?.rpm_avatar_id || 'N/A'}</code></div>
+                    </div>
+                </div>
+                
+                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;">
+                    <button class="btn btn-primary" onclick="downloadAvatarGLB('${agent.avatar?.rpm_avatar_id}')">
+                        📥 Download GLB
+                    </button>
+                    <button class="btn btn-secondary" onclick="viewInUnity('${agent.avatar?.rpm_avatar_id}')">
+                        🎮 View in Unity
+                    </button>
+                </div>
+            `;
+            
+            modal.classList.add('active');
+        }
+
+        // Close modal
+        function closeAvatarModal() {
+            document.getElementById('avatarModal').classList.remove('active');
+        }
+
+        // Download avatar GLB
+        async function downloadAvatarGLB(avatarId) {
+            window.open(`${API_BASE_URL}/api/rpm/download/${avatarId}`, '_blank');
+        }
+
+        // View in Unity
+        async function viewInUnity(avatarId) {
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/rpm/unity/config/${avatarId}`);
+                const config = await response.json();
+                
+                alert(`Unity Configuration:\n\nAvatar ID: ${config.avatarId}\nGLB URL: ${config.glbUrl}\n\nCopy this configuration to your Unity project.`);
+                
+                // Copy to clipboard
+                navigator.clipboard.writeText(JSON.stringify(config, null, 2));
+            } catch (error) {
+                alert('Error getting Unity config: ' + error.message);
+            }
+        }
+
+        // Refresh gallery
+        async function refreshAvatarGallery() {
+            await loadAvatarGallery();
+            await loadAvatarStats();
+        }
+
+        // Check RPM status
+        async function checkRPMStatus() {
+            const statusDiv = document.getElementById('rpmApiStatus');
+            if (!statusDiv) return;
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/rpm/stats`);
+                const data = await response.json();
+                
+                const statusHtml = `
+                    <div style="display: grid; gap: 10px;">
+                        <div>✅ <strong>Backend API:</strong> Connected</div>
+                        <div>${data.api_configured ? '✅' : '⚠️'} <strong>RPM API Key:</strong> ${data.api_configured ? 'Configured' : 'Not configured'}</div>
+                        <div>📊 <strong>Total Avatars:</strong> ${data.total_avatars}</div>
+                        <div>🔗 <strong>Base URL:</strong> <code>${API_BASE_URL}</code></div>
+                    </div>
+                `;
+                
+                statusDiv.innerHTML = statusHtml;
+            } catch (error) {
+                statusDiv.innerHTML = '<div class="error-message">❌ Failed to connect to RPM API</div>';
+            }
+        }
+
+        // Close modal when clicking outside
+        document.addEventListener('click', function(e) {
+            const modal = document.getElementById('avatarModal');
+            if (e.target === modal) {
+                closeAvatarModal();
+            }
+        });
     </script>
 </body>
 </html>
